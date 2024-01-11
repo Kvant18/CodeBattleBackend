@@ -1,8 +1,9 @@
 using CodeBattleBackend.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+//using WebSocketSharp.Server;
 
-namespace CodeBattleBackend.Messages
+namespace CodeBattleBackend.Connections.Messages
 {
   public class Request
   {

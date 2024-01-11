@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace CodeBattleBackend.Types
 {
   public enum StatusCode
@@ -17,12 +19,15 @@ namespace CodeBattleBackend.Types
     public string PlayerName;
     public string Status;
     public string UUID;
+    public GameObject Prefab;
+    public GameObject Parent;
 
-    public PlayerObject(string name, string status, string uuid)
+    public PlayerObject(string name, string status, string uuid, GameObject paernt)
     {
       PlayerName = name;
       Status = status;
       UUID = uuid;
+      Parent = paernt;
     }
   }
 }

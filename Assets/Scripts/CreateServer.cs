@@ -1,5 +1,6 @@
 using System.Threading;
 using CodeBattleBackend;
+using CodeBattleBackend.Types;
 using UnityEngine;
 
 public class CreateServer : MonoBehaviour
@@ -12,24 +13,38 @@ public class CreateServer : MonoBehaviour
 
   [SerializeField] private PanelProps PanelProps;
 
-  private GameObject ControlPanel;
+  [SerializeField] private GameObject ControlPanel;
 
-  //[SerializeField] private InputField InputMessage;
-  //private Creator creator;
+  public delegate void Creating(PlayerObject player);
+  public static event Creating mainThreadQueuedCallbacks;
+  public static PlayerObject param;
+  private event Creating eventsClone;
 
   private void Awake()
   {
-    Canvas parent = FindFirstObjectByType<Canvas>();
-    GameObject temp = Instantiate(PanelProps.Parent, parent.gameObject.transform);
-    PanelControl tempPanel = temp.AddComponent<PanelControl>();
-    PanelProps tempProps = new();
-    tempProps.offset = PanelProps.offset;
-    tempProps.PlayerPrefab = PanelProps.PlayerPrefab;
-    ControlPanel = tempProps.Parent = temp;
-    Props.CreatorPlayer = tempPanel;
+    PanelControl tempPanel = ControlPanel.AddComponent<PanelControl>();
+    tempPanel.Parse(PanelProps);
+    Props.CreatorPlayer = ControlPanel;
     ControlPanel.SetActive(false);
-    //Debug.Log(Props.CreatorPlayer);
+    //GameObject test = new GameObject("Test");
+    //test.AddComponent<RectTransform>();
+    //test.AddComponent<Image>().color = Color.gray;
+
   }
+
+  private void FixedUpdate()
+  {
+    if (mainThreadQueuedCallbacks != null && param != null)
+    {
+      eventsClone = mainThreadQueuedCallbacks;
+      mainThreadQueuedCallbacks = null;
+      param.Prefab = PanelProps.PlayerPrefab;
+      eventsClone.Invoke(param);
+      eventsClone = null;
+      param = null;
+    }
+  }
+
 
 
   public void StartServer()

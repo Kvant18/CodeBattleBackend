@@ -1,7 +1,7 @@
 using CodeBattleBackend.Types;
 using Newtonsoft.Json;
 
-namespace CodeBattleBackend.Messages
+namespace CodeBattleBackend.Connections.Messages
 {
   public class Response
   {

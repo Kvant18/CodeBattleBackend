@@ -13,10 +13,26 @@ public class ServerProps : ScriptableObject
   private bool Isprotected = true;
   private string password = "password";
   private int playerCount;
-  private PanelControl creatorPlayer;
+  private GameObject creatorPlayer;
+  private GameObject prefabPlayer;
+
+  public GameObject PrefabPlayer
+  {
+    get
+    {
+      return prefabPlayer;
+    }
+    set
+    {
+      if (prefabPlayer != value)
+      {
+        prefabPlayer = value;
+      }
+    }
+  }
 
 
-  public PanelControl CreatorPlayer
+  public GameObject CreatorPlayer
   {
     set
     {

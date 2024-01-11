@@ -1,16 +1,34 @@
-using CodeBattleBackend.Core;
+using System.Collections.Generic;
 using CodeBattleBackend.Types;
 using TMPro;
 using UnityEngine;
 
-public class PanelControl : Creator
+public class PanelControl : MonoBehaviour
 {
-    private Vector2 FullOffset = new Vector2(300, -150);
+    public GameObject _Parent;
+    public GameObject _PlayerPrefab;
+    public float _offset = 30f;
+    public static Dictionary<string, GameObject> playerList = new Dictionary<string, GameObject>();
+    private static Vector2 FullPos = new Vector2(300f, -150f);
 
-    public override void Create(PlayerObject player)
+    public void Parse(PanelProps panelProps)
     {
-        GameObject TempPlayer = Instantiate(_PlayerPrefab, _Parent.transform);
-        TempPlayer.transform.position = FullOffset;
+        _Parent = panelProps.Parent;
+        _PlayerPrefab = panelProps.PlayerPrefab;
+        _offset = panelProps.offset;
+    }
+
+
+    public void Create(PlayerObject player)
+    {
+        GameObject TempPlayer = Instantiate(player.Prefab, player.Parent.transform);
+        RectTransform rectTransform = TempPlayer.GetComponent<RectTransform>();
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(0f, 1f);
+        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        rectTransform.anchoredPosition = FullPos;
+        //rectTransform.anchorMax.Set(0f, 1f);
+        //TempPlayer.transform.position = FullOffset;
         TextMeshProUGUI[] Textes = TempPlayer.GetComponentsInChildren<TextMeshProUGUI>();
         foreach (var obj in Textes)
         {
@@ -29,10 +47,10 @@ public class PanelControl : Creator
         }
 
         playerList.Add(player.UUID, TempPlayer);
-        FullOffset.y -= 150f / 2f + _offset;
+        FullPos.y -= 150f + _offset;
     }
 
-    public override void Delete(string uuid)
+    public void Delete(string uuid)
     {
         playerList.TryGetValue(uuid, out GameObject temp);
         if (temp != null)
